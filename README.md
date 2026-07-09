@@ -49,7 +49,7 @@ Once loaded, HA-POWERS will:
 1. Show you the **Progress Tracker** (7 phases)
 2. Guide you through **Brainstorming** → **Planning** → **Development** → **Review** → **PR** → **Cleanup**
 3. Update checkboxes as each phase completes
-4. Create artifacts in `docs/specs/`, `docs/plans/`, and your git worktrees
+4. Create artifacts in `<project>/docs/specs/`, `<project>/docs/plans/`, and your git worktrees (inside the project directory)
 
 ### Optional: Kanban Board
 
@@ -156,7 +156,7 @@ Show this at the START of every feature. Update checkboxes as each phase complet
 - [ ] Ask clarifying questions
 - [ ] Propose 2-3 approaches
 - [ ] Present design & architecture
-- [ ] Write spec to docs/specs/
+- [ ] Write spec to `<project>/docs/specs/`
 - [ ] Self-review spec (no placeholders)
 - [ ] User approves spec ✅
 
@@ -167,7 +167,7 @@ Show this at the START of every feature. Update checkboxes as each phase complet
 - [ ] Include exact file paths
 - [ ] Include TDD cycle for each task
 - [ ] Review plan completeness
-- [ ] Save to docs/plans/ ✅
+- [ ] Save to `<project>/docs/plans/` ✅
 
 ### Phase 3: Git Worktrees
 - [ ] Detect existing worktree
@@ -213,8 +213,8 @@ Each phase has a **gate** that must pass before moving to the next:
 
 | Phase | Gate Condition | Output Artifact |
 |-------|---------------|-----------------|
-| 1. Brainstorming | User approves written spec | `docs/specs/<date>-<topic>-design.md` |
-| 2. Writing Plans | Plan saved and committed | `docs/plans/<date>-<topic>-plan.md` |
+| 1. Brainstorming | User approves written spec | `<project>/docs/specs/<date>-<topic>-design.md` |
+| 2. Writing Plans | Plan saved and committed | `<project>/docs/plans/<date>-<topic>-plan.md` |
 | 3. Git Worktrees | Worktree created, tests green | Isolated `./worktrees/feat/<name>` |
 | 4. Subagent Dev | All tasks complete, tests pass | Feature code on branch |
 | 5. Code Review | Review approved | Reviewed code |

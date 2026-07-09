@@ -58,8 +58,8 @@ Each phase has a **gate** that must pass before the next phase starts:
 
 | Phase | Gate Condition | Output Artifact |
 |-------|---------------|-----------------|
-| 1. Brainstorming | User approves written spec | `docs/specs/<date>-<topic>-design.md` |
-| 2. Writing Plans | Plan saved and committed | `docs/plans/<date>-<topic>-plan.md` |
+| 1. Brainstorming | User approves written spec | `<project>/docs/specs/<date>-<topic>-design.md` |
+| 2. Writing Plans | Plan saved and committed | `<project>/docs/plans/<date>-<topic>-plan.md` |
 | 3. Git Worktrees | Worktree created, tests green | Isolated `./worktrees/feat/<name>` |
 | 4. Subagent Dev | All tasks complete, tests pass | Feature code on branch |
 | 5. Code Review | Review approved (or issues fixed) | Reviewed code |
@@ -129,7 +129,7 @@ This isn't bureaucracy — it's **insurance against your future self forgetting 
 - [ ] Ask clarifying questions
 - [ ] Propose 2-3 approaches
 - [ ] Present design & architecture
-- [ ] Write spec to docs/specs/
+- [ ] Write spec to `<project>/docs/specs/`
 - [ ] Self-review spec (no placeholders)
 - [ ] User approves spec ✅
 
@@ -140,7 +140,7 @@ This isn't bureaucracy — it's **insurance against your future self forgetting 
 - [ ] Include exact file paths
 - [ ] Include TDD cycle for each task
 - [ ] Review plan completeness
-- [ ] Save to docs/plans/ ✅
+- [ ] Save to `<project>/docs/plans/` ✅
 
 ### Phase 3: Git Worktrees
 - [ ] Detect existing worktree
@@ -229,7 +229,7 @@ Goal: Turn a fuzzy idea into a concrete, approved spec.
 2. **Ask clarifying questions** — one at a time. Purpose? Constraints? Success criteria?
 3. **Propose 2-3 approaches** — with trade-offs and a recommendation
 4. **Present design** — architecture, components, data flow, testing strategy
-5. **User approves** → write spec to `docs/specs/<date>-<topic>-design.md`
+5. **User approves** → write spec to `<project>/docs/specs/<date>-<topic>-design.md`
 6. **Self-review spec** — check for placeholders, contradictions, ambiguity
 7. **User reviews final spec** — wait for explicit approval
 
@@ -253,7 +253,7 @@ Goal: Decompose the approved spec into bite-sized, implementable tasks.
    - [ ] All file paths are exact
    - [ ] Code examples are copy-pasteable
    - [ ] Verification steps are explicit
-5. **Save plan** to `docs/plans/<date>-<topic>-plan.md` and commit
+5. **Save plan** to `<project>/docs/plans/<date>-<topic>-plan.md` and commit
 
 > **Gate output:** Implementation plan with N sequential tasks.  
 > **Next:** Ask user if they want isolated workspace → invoke `git-worktrees` (or skip to Phase 4 if declined).

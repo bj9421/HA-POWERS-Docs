@@ -49,7 +49,7 @@ HA-POWERS 以 **Hermes Agent skill** 形式提供。無需額外安裝 — 將 s
 1. 向你顯示**進度追蹤器**（7 個階段）
 2. 引導你完成**腦力激盪** → **計畫** → **開發** → **審查** → **PR** → **清理**
 3. 每完成一個階段就更新核取方塊
-4. 在 `docs/specs/`、`docs/plans/` 和你的 git worktrees 中建立產物
+4. 在 `<project>/docs/specs/`、`<project>/docs/plans/` 和你的 git worktrees 中建立產物
 
 ### 選配：Kanban 看板
 
@@ -156,7 +156,7 @@ flowchart TD
 - [ ] 提出釐清問題
 - [ ] 提出 2-3 種方法
 - [ ] 展示設計與架構
-- [ ] 撰寫規格書至 docs/specs/
+- [ ] 撰寫規格書至 `<project>/docs/specs/`
 - [ ] 自我審查規格書（不留佔位符）
 - [ ] 使用者核准規格書 ✅
 
@@ -167,7 +167,7 @@ flowchart TD
 - [ ] 包含精確的檔案路徑
 - [ ] 每個任務都包含 TDD 循環
 - [ ] 審查計畫完整性
-- [ ] 儲存至 docs/plans/ ✅
+- [ ] 儲存至 `<project>/docs/plans/` ✅
 
 ### 第 3 階段：Git Worktrees
 - [ ] 偵測現有的 worktree
@@ -213,8 +213,8 @@ flowchart TD
 
 | 階段 | 閥門條件 | 輸出產物 |
 |------|---------|---------|
-| 1. 腦力激盪 | 使用者核准書面規格 | `docs/specs/<日期>-<主題>-設計.md` |
-| 2. 撰寫計畫 | 計畫已儲存並提交 | `docs/plans/<日期>-<主題>-計畫.md` |
+| 1. 腦力激盪 | 使用者核准書面規格 | `<project>/docs/specs/<日期>-<主題>-設計.md` |
+| 2. 撰寫計畫 | 計畫已儲存並提交 | `<project>/docs/plans/<日期>-<主題>-計畫.md` |
 | 3. Git Worktrees | worktree 已建立，測試通過 | 隔離的 `./worktrees/feat/<名稱>` |
 | 4. 子代理開發 | 所有任務完成，測試通過 | 分支上的功能程式碼 |
 | 5. 程式碼審查 | 審查通過 | 已審查的程式碼 |
