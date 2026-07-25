@@ -239,31 +239,35 @@ flowchart TD
 
 HA-POWERS 僅在實際工作需要時使用**最多 0–2 個 subagent**：
 
-```
-                 ┌──────────────────────────────────┐
-                 │  協調者（你 + Hermes）              │  ← 1 個 profile
-                 │  直接處理所有階段：                  │
-                 │  • 第 1 階段：與使用者交談（規格）    │
-                 │  • 第 2 階段：撰寫計畫               │
-                 │  • 第 3 階段：git worktree           │
-                 │  • 第 5 階段：lint/安全檢查          │
-                 │  • 第 6 階段：git push / gh pr       │
-                 │  • 第 7 階段：清理                   │
-                 └──────────────┬───────────────────┘
-                                │
-                  僅第 4 階段： │ delegate_task
-                                ▼
-                 ┌──────────────────────────────────┐
-                 │  1–2 個子代理（暫時的）              │
-                 │  ┌────────────┐  ┌────────────┐  │
-                 │  │ 開發者     │  │ 審查者     │  │
-                 │  │ （程式碼） │  │ （稽核）   │  │
-                 │  └────────────┘  └────────────┘  │
-                 │  • 由 delegate_task 產生           │
-                 │  •  delivering report 後消失       │
-                 │  • 與協調者相同的 profile          │
-                 │  • 無持久狀態                      │
-                 └──────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph ORCH["🎭 協調者（你 + Hermes）— 1 個 profile"]
+        direction TB
+        P1["第 1 階段：與使用者交談（規格）"]
+        P2["第 2 階段：撰寫計畫"]
+        P3["第 3 階段：git worktree"]
+        P5["第 5 階段：lint / 安全檢查"]
+        P6["第 6 階段：git push / gh pr"]
+        P7["第 7 階段：清理"]
+    end
+
+    subgraph SUB["🤖 1–2 個子代理（暫時性）"]
+        DEV["開發者（程式碼）"]
+        REV["審查者（稽核）"]
+    end
+
+    ORCH -->|"僅第 4 階段\ndelegate_task"| SUB
+
+    style ORCH fill:#1a1a2e,stroke:#e94560,color:#fff
+    style SUB fill:#16213e,stroke:#0f3460,color:#fff
+    style P1 fill:#0f3460,color:#fff
+    style P2 fill:#0f3460,color:#fff
+    style P3 fill:#0f3460,color:#fff
+    style P5 fill:#0f3460,color:#fff
+    style P6 fill:#0f3460,color:#fff
+    style P7 fill:#0f3460,color:#fff
+    style DEV fill:#533483,color:#fff
+    style REV fill:#533483,color:#fff
 ```
 
 | 階段 | 需要 Subagent？ | 原因 |
