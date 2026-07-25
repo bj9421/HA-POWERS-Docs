@@ -47,7 +47,29 @@ Each phase solves a specific failure mode. They are **sequential and gated** —
 
 ### The Guiding Principle
 
-> **Every feature, every time, from idea to merged PR, with no steps skipped.**
+> **A toolbox of composable phases. Use what you need, skip what you don't.**
+> Full pipeline for big bets. Partial pipeline for most work. Grill-me alone for quick alignment.
+> Never use more process than the risk warrants.
+
+This isn't bureaucracy — it's **insurance against your future self forgetting why you made a decision today**. The spec, the plan, the PR description — they're all artifacts you (or your reviewer) will thank you for later.
+
+### 🧰 Toolbox, Not Assembly Line
+
+> **HA-POWERS is a toolbox of composable phases, not a fixed assembly line you must ride from start to finish.**
+
+Inspired by Matt Pocock's philosophy: each phase is an independent skill you can pick up and put down as needed. The full 7-phase pipeline is the **maximum** path — for large, cross-module features with team review. Most work doesn't need all 7 phases.
+
+| Task Scale | Recommended Path | Example |
+|------------|-----------------|---------|
+| **Tiny** (typo, config) | Fix directly — no phases | Change a constant, rename a file |
+| **Small** (single script, clear scope) | Phase 0 (grill-me) → implement directly | Add a `--organize` flag to a script |
+| **Medium** (multi-file, some design choices) | Phase 0 → Phase 1 (spec) → implement | Refactor a module, add a new feature |
+| **Large** (cross-module, architecture) | Full pipeline (Phase 0–7) | New project, major redesign |
+| **Critical** (production, security) | Full pipeline + extra review cycles | Auth system, data migration |
+
+**The key insight:** Don't use a 7-phase pipeline for a 5-minute fix. Don't skip planning for a week-long project. Match the process to the risk.
+
+**Real example:** Adding `--organize` to `yt2md_pipeline.py` — we only needed Phase 0 (grill-me for 3 clarifying questions), then wrote the code directly. No spec, no plan, no worktree, no PR. Done in one session.
 
 This isn't bureaucracy — it's **insurance against your future self forgetting why you made a decision today**.
 

@@ -1,7 +1,7 @@
 ---
 name: ha-powers
 description: "ORCHESTRATOR: Full-stack development pipeline from ideation to merge. One profile, 0-2 transient subagents. Includes Progress Tracker (superpowers-style) with 7-phase granular checklists."
-version: 1.3.0
+version: 1.8.0
 author: Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
@@ -9,6 +9,9 @@ metadata:
   hermes:
     tags: [orchestrator, workflow, pipeline, development, git]
     related_skills:
+      - grilling
+      - grill-me
+      - grill-with-docs
       - brainstorming
       - writing-plans
       - git-worktrees
@@ -19,7 +22,8 @@ metadata:
       - systematic-debugging
       - kanban
       - design-philosophy-pattern
-      - design-philosophy-pattern
+      - handoff
+      - codebase-design
 ---
 
 # HA-POWERS — Full-Stack Development Pipeline
@@ -34,8 +38,11 @@ metadata:
 flowchart TD
     U[User says: build X] --> GATE0{Non-trivial?}
     GATE0 -->|No - typo/config/one-liner| FIX[Fix directly, skip pipeline]
-    GATE0 -->|Yes| BRAIN[Phase 1: Brainstorming]
+    GATE0 -->|Yes| GATE_FUZZY{Idea clear?}
+    GATE_FUZZY -->|Fuzzy / needs alignment| GRILL[Phase 0: grill-me]
+    GATE_FUZZY -->|Clear enough| BRAIN[Phase 1: Brainstorming]
     
+    GRILL -->|Aligned| BRAIN
     BRAIN -->|Spec approved| PLAN[Phase 2: writing-plans]
     PLAN -->|Plan saved| WORK[Phase 3: git-worktrees]
     
@@ -58,6 +65,7 @@ Each phase has a **gate** that must pass before the next phase starts:
 
 | Phase | Gate Condition | Output Artifact |
 |-------|---------------|-----------------|
+| 0. Grill Me (optional) | Shared understanding confirmed | Aligned understanding (verbal) |
 | 1. Brainstorming | User approves written spec | `<project>/docs/specs/<date>-<topic>-design.md` |
 | 2. Writing Plans | Plan saved and committed | `<project>/docs/plans/<date>-<topic>-plan.md` |
 | 3. Git Worktrees | Worktree created, tests green | Isolated `./worktrees/feat/<name>` |
@@ -113,6 +121,45 @@ Each phase solves a specific failure mode. They are **sequential and gated** —
 
 This isn't bureaucracy — it's **insurance against your future self forgetting why you made a decision today**. The spec, the plan, the PR description — they're all artifacts you (or your reviewer) will thank you for later.
 
+### 🧰 Toolbox, Not Assembly Line
+
+> **HA-POWERS is a toolbox of composable phases, not a fixed assembly line you must ride from start to finish.**
+
+Inspired by Matt Pocock's philosophy: each phase is an independent skill you can pick up and put down as needed. The full 7-phase pipeline is the **maximum** path — for large, cross-module features with team review. Most work doesn't need all 7 phases.
+
+| Task Scale | Recommended Path | Example |
+|------------|-----------------|---------|
+| **Tiny** (typo, config) | Fix directly — no phases | Change a constant, rename a file |
+| **Small** (single script, clear scope) | Phase 0 (grill-me) → implement directly | Add a `--organize` flag to a script |
+| **Medium** (multi-file, some design) | Phase 0 → Phase 1 (spec) → implement | Refactor a module, add a new feature |
+| **Large** (cross-module, architecture) | Full pipeline (Phase 0–7) | New project, major redesign |
+| **Critical** (production, security) | Full pipeline + extra review | Auth system, data migration |
+
+**The key insight:** Don't use a 7-phase pipeline for a 5-minute fix. Don't skip planning for a week-long project. Match the process to the risk.
+
+**Real example:** Adding `--organize` to `yt2md_pipeline.py` — only needed Phase 0 (grill-me for 3 clarifying questions), then wrote the code directly. No spec, no plan, no worktree, no PR. Done in one session.
+
+---
+
+## Handoff — Session Continuity (Cross-Cutting)
+*Skill: `handoff`*
+
+> **Any phase can be interrupted.** When the user says "先停在這裡" / "下次再繼續" / "先到這", trigger `handoff` immediately — don't try to finish the current phase.
+
+**Process:**
+1. Snapshot current phase and progress
+2. Generate structured handoff file → `~/handoffs/YYYY-MM-DD-<topic>.md`
+3. Include: current state, completed vs pending, key decisions, file paths, suggested skills
+4. Redact sensitive info (keys, passwords)
+
+**Resuming from handoff:**
+```
+請讀取 ~/handoffs/YYYY-MM-DD-<topic>.md 並接續上次的工作。
+```
+Agent reads the file, loads suggested skills, and continues from the pending phase.
+
+> 💡 **Why this exists:** HA-POWERS is a multi-phase pipeline. Without handoff, a session interruption means losing all context. Handoff preserves the pipeline state so the next session picks up exactly where you left off.
+
 ---
 
 ## Progress Tracker
@@ -124,9 +171,16 @@ This isn't bureaucracy — it's **insurance against your future self forgetting 
 ```
 ## 🚧 Progress Tracker
 
+### Phase 0: Grill Me (if idea is fuzzy)
+- [ ] Load grilling primitive
+- [ ] Interview: one question at a time
+- [ ] (Optional) grill-with-docs: create ADR + CONTEXT.md
+- [ ] Confirm shared understanding ✅
+
 ### Phase 1: Brainstorming
 - [ ] Explore context & codebase
 - [ ] Ask clarifying questions
+- [ ] Load codebase-design vocabulary (if designing modules)
 - [ ] Propose 2-3 approaches
 - [ ] Present design & architecture
 - [ ] Write spec to `<project>/docs/specs/`
@@ -204,14 +258,27 @@ This isn't bureaucracy — it's **insurance against your future self forgetting 
 
 ## When to Use This Pipeline
 
-**YES — use full pipeline when:**
+> **Each phase is an independent tool. Pick what you need, skip what you don't.**
+
+**FULL pipeline (Phase 0–7) — for large, high-risk work:**
 - User says "build a [feature/component/app]"
 - Multi-step coding task with >2 files
-- Task involves architecture decisions
+- Task involves architecture decisions that are hard to undo
 - Task has test implications
 - Any project where the user might want a PR trail
 
-**NO — skip pipeline (handle directly) when:**
+**PARTIAL pipeline (Phase 0–2, then code directly):**
+- Single-file change with some design choices
+- Modifying an existing script (add flag, refactor function)
+- Task you'll review yourself (no team PR needed)
+- Prototype / spike that might be thrown away
+
+**MINIMAL pipeline (Phase 0 only, then code directly):**
+- Clear scope but need to align on 2-3 details (API choice, output format)
+- User has a preference but needs help deciding between options
+- Quick grill-me session (3-5 questions) then straight to coding
+
+**SKIP pipeline entirely (fix directly):**
 - Fixing a single-line typo
 - Changing a config value
 - Running a script
@@ -220,6 +287,39 @@ This isn't bureaucracy — it's **insurance against your future self forgetting 
 
 ## Phase Details
 
+### Phase 0: Grill Me (Optional Pre-Alignment)
+*Skills: `grilling` (primitive) → `grill-me` or `grill-with-docs` (wrappers)*
+
+Goal: When the idea is fuzzy, align with the user BEFORE entering full brainstorming.
+
+**When to trigger:**
+- User's description is vague ("我想做一個 XXX 功能")
+- Multiple valid interpretations exist
+- User says "幫我想想" or "幫我分析"
+
+**When to skip:**
+- Idea is already clear and specific
+- User says "just do it, no need for planning"
+
+**Process:**
+1. Load `grilling` skill (core interview primitive)
+2. Ask one question at a time, with recommended answer
+3. Classify each response: Fact (verify yourself) vs Decision (ask user)
+4. Walk every branch of the decision tree
+5. Confirm shared understanding with a checklist
+6. User confirms → proceed to Phase 1
+
+**File output choice:**
+- `grill-me` — no files, conversation only (quick alignment)
+- `grill-with-docs` — auto-creates ADR + CONTEXT.md (persistent decisions)
+
+Pick based on whether the decisions need a paper trail.
+
+**Output:** Aligned understanding (no file artifact needed, unless grill-with-docs used)
+**Next:** Invoke `brainstorming` skill (Phase 1).
+
+> 💡 **Why this exists:** Brainstorming produces a spec. But if the idea is too fuzzy, brainstorming wastes time on wrong assumptions. Grill-me catches misalignment early — 5 minutes of Q&A can save an hour of rework.
+
 ### Phase 1: Brainstorming
 *Skill: `brainstorming`*
 
@@ -227,7 +327,8 @@ Goal: Turn a fuzzy idea into a concrete, approved spec.
 
 1. **Explore context** — read existing files, understand the codebase
 2. **Ask clarifying questions** — one at a time. Purpose? Constraints? Success criteria?
-3. **Propose 2-3 approaches** — with trade-offs and a recommendation
+3. **Load `codebase-design` vocabulary** — when designing new modules, use Module/Interface/Seam/Adapter terminology for consistent design language
+4. **Propose 2-3 approaches** — with trade-offs and a recommendation
 4. **Present design** — architecture, components, data flow, testing strategy
 5. **User approves** → write spec to `<project>/docs/specs/<date>-<topic>-design.md`
 6. **Self-review spec** — check for placeholders, contradictions, ambiguity
@@ -346,14 +447,24 @@ git branch -d feat/<name>   # if merged
 
 ```
 User says "build X"
+│
 ├─ Is it a single-line fix / config change / typo?
-│   └─ YES → Fix directly. Skip pipeline.
+│   └─ YES → Fix directly. Skip all phases.
 │
 ├─ Is it a clear bug with known root cause?
 │   └─ YES → Use systematic-debugging skill. Skip brainstorming + plans.
 │
-├─ Is it a non-trivial new feature / component?
+├─ Is it a small change (1 file, clear scope)?
+│   └─ YES → Phase 0 (grill-me if needed) → code directly.
+│       Example: add a flag, refactor a function, fix a script.
+│
+├─ Is it a medium feature (multi-file, some design choices)?
+│   └─ YES → Phase 0 → Phase 1 (spec) → code directly.
+│       Skip worktrees, PR, review. Commit to feature branch.
+│
+├─ Is it a large feature / new project / architecture change?
 │   └─ YES → Run full pipeline:
+│       Phase 0: grill-me (if fuzzy)
 │       Phase 1: brainstorming → spec
 │       Phase 2: writing-plans → task list
 │       Phase 3: git-worktrees → isolated workspace
@@ -556,6 +667,11 @@ The `ha-powers` skill itself is **declarative orchestration** — it tells you w
 | 1.0.0 | 2026-07-08 | Initial orchestrator skill, 7-phase pipeline |
 | 1.1.0 | 2026-07-09 | Added Progress Tracker, Phase Gates, Kanban integration |
 | 1.3.0 | 2026-07-09 | Added Design Philosophy section explaining why the 7-phase pipeline exists, what problems it solves, and what HA-POWERS adds on top of obra's Superpowers |
+| 1.5.0 | 2026-07-10 | Reverted hardcoded paths — restored generic `<project>/docs/specs/` and `<project>/docs/plans/` to avoid environment-specific path issues |
+| 1.7.0 | 2026-07-25 | Refactored grill-me into grilling primitive + grill-me/grill-with-docs wrappers. Phase 0 now supports file output choice (ADR + CONTEXT.md). |
+| 1.8.0 | 2026-07-25 | Toolbox philosophy: added "Toolbox, Not Assembly Line" section, partial/minimal pipeline paths, updated Decision Tree with 4-tier sizing, softened closing statement. |
+| 1.6.0 | 2026-07-25 | Integrated mattpocock skills: Phase 0 (grill-me pre-alignment), codebase-design vocabulary in Phase 1, handoff for session continuity |
+| 1.6.1 | 2026-07-25 | Added git version control for skills directory; hermes-agent-skill-authoring v1.2.0 enforces mandatory pre-edit gate (todo → plan → confirm → commit) |
 
 > ⚠️ **Name change notice:** Originally `ha-power`, renamed to `ha-powers` (plural) to better match the Superpowers homage. All references must use `ha-powers` going forward: skill directory, frontmatter `name:`, `@skill:ha-powers` command, and all docs.
 
@@ -574,5 +690,5 @@ flowchart LR
     style I fill:#48b,color:#fff
 ```
 
-**HA-POWERS = Every feature, every time, from idea to merged PR, with no steps skipped.**  
-Load this skill and follow the phases. Each phase gates to the next. Never guess what comes next.
+**HA-POWERS = A toolbox of composable phases. Use what you need, skip what you don't.**  
+Full pipeline for big bets. Partial pipeline for most work. Grill-me alone for quick alignment. Never use more process than the risk warrants.

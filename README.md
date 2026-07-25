@@ -55,14 +55,27 @@ HA-POWERS guides you through **7 gated phases**:
 
 ## 🔧 When to Use
 
-### YES — use full pipeline when:
+> **Each phase is an independent tool. Pick what you need, skip what you don't.**
+
+**FULL pipeline (Phase 0–7) — for large, high-risk work:**
 - User says "build a [feature/component/app]"
 - Multi-step coding task with >2 files
-- Task involves architecture decisions
+- Task involves architecture decisions that are hard to undo
 - Task has test implications
 - Any project where you want a PR trail
 
-### NO — skip pipeline (handle directly) when:
+**PARTIAL pipeline (Phase 0–2, then code directly):**
+- Single-file change with some design choices
+- Modifying an existing script (add flag, refactor function)
+- Task you'll review yourself (no team PR needed)
+- Prototype / spike that might be thrown away
+
+**MINIMAL pipeline (Phase 0 only, then code directly):**
+- Clear scope but need to align on 2-3 details (API choice, output format)
+- User has a preference but needs help deciding between options
+- Quick grill-me session (3-5 questions) then straight to coding
+
+**SKIP pipeline entirely (fix directly):**
 - Fixing a single-line typo
 - Changing a config value
 - Running a script
@@ -89,7 +102,7 @@ project-root/
 3. **Kanban persists** — cross-session tracking for all features
 4. **Git-friendly** — all outputs are files, version controlled
 5. **Zero dependencies** — pure Python stdlib, no server or database
-6. **Flexible** — skip phases for small features
+6. **Toolbox, not assembly line** — pick the right depth for the risk
 
 ---
 
