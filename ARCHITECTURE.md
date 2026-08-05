@@ -122,6 +122,20 @@ Show this at the START of every feature. Update checkboxes as each phase complet
 - [ ] Report findings (severity)
 - [ ] Fix issues → re-review ✅
 
+> **🔀 Review vs Debug 分工（v1.9.0）**
+>
+> Review（事前預防）與 Debug（事後治療）是**時間線上的不同點，不是並行選項**。
+>
+> | Skill | 觸發時機 | 目的 | 輸出 |
+> |-------|---------|------|------|
+> | `requesting-code-review` / `deep-code-review` | 功能寫完、發 PR 前 | **預防** | bug 報告 + 嚴重度分級 |
+> | `systematic-debugging` / `hermes-debug-protocol` | bug 已發生、有異常行為 | **治療** | 根因 + 修復證據 |
+>
+> - **Review = 還沒壞，檢查會不會壞** → 輸出 bug 報告與建議
+> - **Debug = 已經壞了，查為什麼** → 輸出根因 + Before/After 證據
+> - **上下游關係**：review 發現問題 → 修復 → 若修了還壞 → 才進入 debug 8 步流程。不是並行、不是替代。
+> - **debug skills 三選一，不疊加**：`hermes-debug-protocol`（整合版）或 `systematic-debugging` + `debug-agent`（拆件）。
+
 ### Phase 6: PR + CI
 - [ ] Push branch to GitHub
 - [ ] Create PR with description
